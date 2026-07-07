@@ -94,48 +94,54 @@
   var soundToggle = document.getElementById('soundToggle');
   var iconOn = document.getElementById('soundIconOn');
   var iconOff = document.getElementById('soundIconOff');
-  var audioCtx, gainNode, oscA, oscB, playing = false;
+  var homeVideo = document.getElementById('homeVideo');
+  var homeSection = document.getElementById('home');
+  var playing = false;
+  var homeVisible = true;
 
-  function startAmbient(){
-    try{
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      gainNode = audioCtx.createGain();
-      gainNode.gain.value = 0;
-      gainNode.connect(audioCtx.destination);
+  function updateHomeVideoState(){
+    if(!homeVideo || !homeSection) return;
 
-      oscA = audioCtx.createOscillator();
-      oscA.type = 'sine';
-      oscA.frequency.value = 55;
-      oscA.connect(gainNode);
+    if(!homeVisible || document.hidden){
+      homeVideo.pause();
+      homeVideo.muted = true;
+      homeVideo.volume = 0;
+      return;
+    }
 
-      oscB = audioCtx.createOscillator();
-      oscB.type = 'sine';
-      oscB.frequency.value = 110.5;
-      oscB.connect(gainNode);
-
-      oscA.start();
-      oscB.start();
-      gainNode.gain.linearRampToValueAtTime(0.035, audioCtx.currentTime + 1.2);
-    }catch(err){ /* Web Audio unavailable — toggle is visual only */ }
-  }
-
-  function stopAmbient(){
-    if(gainNode && audioCtx){
-      gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.6);
-      setTimeout(function(){
-        if(oscA) oscA.stop();
-        if(oscB) oscB.stop();
-        if(audioCtx) audioCtx.close();
-      }, 650);
+    if(playing){
+      homeVideo.muted = false;
+      homeVideo.volume = 0.35;
+      if(homeVideo.paused){
+        homeVideo.play().catch(function(){ });
+      }
+    } else {
+      homeVideo.muted = true;
+      homeVideo.volume = 0;
+      homeVideo.pause();
     }
   }
+
+  if(homeSection){
+    var homeObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        homeVisible = entry.isIntersecting;
+        updateHomeVideoState();
+      });
+    }, { threshold: 0.3 });
+    homeObserver.observe(homeSection);
+  }
+
+  document.addEventListener('visibilitychange', function(){
+    updateHomeVideoState();
+  });
 
   soundToggle.addEventListener('click', function(){
     playing = !playing;
     soundToggle.classList.toggle('on', playing);
     iconOn.style.display = playing ? 'block' : 'none';
     iconOff.style.display = playing ? 'none' : 'block';
-    if(playing){ startAmbient(); } else { stopAmbient(); }
+    updateHomeVideoState();
   });
 /*---project carousel---*/
 document.querySelectorAll(".carousel").forEach(carousel=>{

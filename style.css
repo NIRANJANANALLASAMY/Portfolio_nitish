@@ -144,7 +144,8 @@
 
   /* ---------- HERO ---------- */
   #home{
-    height:100vh; min-height:640px;
+    height:calc(100vh - 76px); min-height:calc(640px - 76px);
+    margin-top:76px;
     position:relative;
     overflow:hidden;
     display:flex; flex-direction:column; justify-content:flex-end;
@@ -225,7 +226,7 @@
   }
 
 /* ============================= ABOUT ============================= */
-#about{background:var(--bg-alt);border-top:1px solid var(--line);}
+#about{background:var(--bg-alt);border-top:1px solid var(--line);padding-top:92px;padding-bottom:72px;margin-top:24px;}
 .about-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:64px;align-items:center;}
 @media(max-width:860px){.about-grid{grid-template-columns:1fr;gap:44px;}}
 .photo-panel{
@@ -450,12 +451,12 @@
   }
   #lightbox.open{ opacity:1; pointer-events:auto; }
   .lightbox-content{
-    width:min(760px, 90vw);
-    max-height:min(80vh, 700px);
+    width:min(860px, 94vw);
+    max-height:min(88vh, 820px);
     border-radius:22px;
     border:1px solid var(--line);
     background:linear-gradient(155deg, var(--bg-panel-2), var(--bg-panel));
-    padding:24px;
+    padding:28px;
     display:flex; flex-direction:column; align-items:center; gap:18px;
     position:relative;
     overflow:hidden;
@@ -481,11 +482,16 @@
   }
   .lightbox-close{
     position:absolute; top:16px; right:16px;
-    width:36px; height:36px; border-radius:50%;
+    width:42px; height:42px; border-radius:50%;
     border:1px solid var(--line); background:rgba(12,13,16,.85); cursor:pointer;
     display:flex; align-items:center; justify-content:center;
     z-index:1;
+    font-size:22px;
+    line-height:1;
+    color:var(--text);
+    transition:border-color .3s, transform .3s, background .3s;
   }
+  .lightbox-close:hover{ border-color:var(--accent); transform:translateY(-1px); background:rgba(255,122,41,.12); }
   .lightbox-close svg{ width:16px; height:16px; stroke:var(--text); }
 
   /* ---------- RESUME ---------- */
