@@ -237,16 +237,14 @@
     <div class="wrap gallery-block">
       <div class="gallery-heading">
         <h3>3D Art works</h3>
-        </div>
-    </div>
-    <div class="marquee">
-      <div class="marquee-track ltr" id="track3d"></div>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
     </div>
 
     <div class="wrap gallery-block" style="margin-top:90px;">
       <div class="gallery-heading">
         <h3>2D Art works</h3>
-          </div>
+      </div>
     </div>
     <div class="marquee">
       <div class="marquee-track rtl" id="track2d"></div>
@@ -260,8 +258,11 @@
 
     <div class="lightbox-content">
 
-        <img id="lightboxImg" src="" alt="Artwork">
+        <div class="lightbox-stage">
+          <img id="lightboxImg" src="" alt="Artwork">
+        </div>
 
+        <div id="lightboxThumbs" class="lightbox-thumbs"></div>
         <p id="lightboxLabel"></p>
 
     </div>

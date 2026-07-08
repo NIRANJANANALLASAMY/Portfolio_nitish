@@ -191,35 +191,100 @@ document.querySelectorAll(".carousel").forEach(carousel=>{
     });
 
 });
-  /* ---------------- GALLERY TILES + MARQUEE ---------------- */
-  var imageIcon = '<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>';
-  var expandIcon = '<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 3H3v6"/><path d="M15 21h6v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>';
-
-  function buildTiles(track, prefix, items, variantClasses){
-    var html = '';
-    var count = Array.isArray(items) ? items.length : items;
-
-    for(var r = 0; r < 2; r++){
-      for(var i = 0; i < count; i++){
-        var v = variantClasses[i % variantClasses.length];
-        var label = prefix + ' 0' + (i + 1);
-        var imagePath = Array.isArray(items) ? items[i] : '';
-        var imageMarkup = Array.isArray(items)
-          ? '<img src="' + imagePath + '" alt="' + label + '" class="tile-img">'
-          : imageIcon;
-
-        html += '<div class="tile ' + v + '" data-label="' + label + '" data-image="' + imagePath + '">' +
-                  imageMarkup +
-                  '<div class="expand">' + expandIcon + '</div>' +
-                  '<span class="idx">' + prefix + '_0' + (i + 1) + '</span>' +
-                '</div>';
-      }
+  /* ---------------- GALLERY CARDS + LIGHTBOX ---------------- */
+  var galleryGroups = [
+    {
+      title: 'Time Travel',
+      images: [
+        '3D Works/10) Time Travel/1.png',
+        '3D Works/10) Time Travel/2.png',
+        '3D Works/10) Time Travel/3.png',
+        '3D Works/10) Time Travel/4.png',
+        '3D Works/10) Time Travel/5.png',
+        '3D Works/10) Time Travel/6.png'
+      ]
+    },
+    {
+      title: 'Train',
+      images: [
+        '3D Works/12) Train/1.png',
+        '3D Works/12) Train/2.png',
+        '3D Works/12) Train/3.png',
+        '3D Works/12) Train/4.png',
+        '3D Works/12) Train/5.png',
+        '3D Works/12) Train/6.png',
+        '3D Works/12) Train/7.png',
+        '3D Works/12) Train/8.png',
+        '3D Works/12) Train/9.png'
+      ]
+    },
+    {
+      title: 'Shops',
+      images: [
+        '3D Works/13) Shops/1.png',
+        '3D Works/13) Shops/2.png',
+        '3D Works/13) Shops/3.png',
+        '3D Works/13) Shops/4.png',
+        '3D Works/13) Shops/5.png',
+        '3D Works/13) Shops/6.png'
+      ]
+    },
+    {
+      title: 'Grenade Bomb',
+      images: [
+        '3D Works/3) granade bomb/1.png',
+        '3D Works/3) granade bomb/2.png',
+        '3D Works/3) granade bomb/3.png',
+        '3D Works/3) granade bomb/4.png'
+      ]
+    },
+    {
+      title: 'Gun',
+      images: [
+        '3D Works/5) Gun/1.png',
+        '3D Works/5) Gun/2.png',
+        '3D Works/5) Gun/3.png',
+        '3D Works/5) Gun/4.png',
+        '3D Works/5) Gun/5.png'
+      ]
+    },
+    {
+      title: 'Telephone',
+      images: [
+        '3D Works/7) Telephone/1.png',
+        '3D Works/7) Telephone/2.png',
+        '3D Works/7) Telephone/3.png',
+        '3D Works/7) Telephone/4.png',
+        '3D Works/7) Telephone/5.png'
+      ]
+    },
+    {
+      title: 'Robo',
+      images: [
+        '3D Works/8) Robo/1.png',
+        '3D Works/8) Robo/2.png',
+        '3D Works/8) Robo/3.png',
+        '3D Works/8) Robo/4.png'
+      ]
+    },
+    {
+      title: 'Sticky Bomb',
+      images: [
+        '3D Works/9) sticky bomb/1.png',
+        '3D Works/9) sticky bomb/2.png',
+        '3D Works/9) sticky bomb/3.png',
+        '3D Works/9) sticky bomb/4.png'
+      ]
     }
-    track.innerHTML = html;
-  }
+  ];
 
-  buildTiles(document.getElementById('track3d'), '3D', 6, ['', 'b', 'c']);
-  buildTiles(document.getElementById('track2d'), '2D', [
+  var galleryGrid = document.getElementById('galleryGrid');
+  var lightbox = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  var lightboxLabel = document.getElementById('lightboxLabel');
+  var lightboxThumbs = document.getElementById('lightboxThumbs');
+  var lightboxClose = document.getElementById('lightboxClose');
+  var twoDImages = [
     '2D Works/1.jpg',
     '2D Works/2.png',
     '2D Works/23.jpg',
@@ -229,39 +294,114 @@ document.querySelectorAll(".carousel").forEach(carousel=>{
     '2D Works/34_a.png',
     '2D Works/35.png',
     '2D Works/36.jpg',
-    '2D Works/4.png'
-  ], ['c', '', 'b']);
+    '2D Works/4.png',
+    '2D Works/5.png',
+    '2D Works/6.png',
+    '2D Works/7.png'
+  ];
 
-  var lightbox = document.getElementById('lightbox');
-  var lightboxImg = document.getElementById('lightboxImg');
-  var lightboxLabel = document.getElementById('lightboxLabel');
+  function buildGalleryCards(){
+    if(!galleryGrid) return;
 
-  document.querySelectorAll('.tile').forEach(function(tile){
-    tile.addEventListener('click', function(){
-      if(lightboxImg){
-        lightboxImg.src = tile.dataset.image || '';
-      }
-      if(lightboxLabel){
-        lightboxLabel.textContent = tile.dataset.label || '';
-      }
-      if(lightbox){
-        lightbox.classList.add('open');
-      }
-    });
-  });
+    galleryGrid.innerHTML = galleryGroups.map(function(group){
+      return '<button class="gallery-card" type="button" data-title="' + group.title + '" data-images="' + group.images.join('|') + '">' +
+        '<img src="' + group.images[0] + '" alt="' + group.title + '">' +
+        '<span class="gallery-card-label">' + group.title + '</span>' +
+      '</button>';
+    }).join('');
+  }
 
-  document.getElementById('lightboxClose').addEventListener('click', function(){
+  function build2DMarquee(){
+    var track = document.getElementById('track2d');
+    if(!track) return;
+
+    var html = '';
+    for(var r = 0; r < 2; r++){
+      twoDImages.forEach(function(image, index){
+        var label = '2D 0' + (index + 1);
+        html += '<button class="tile" type="button" data-title="2D Art works" data-images="' + twoDImages.join('|') + '" data-image="' + image + '">' +
+          '<img src="' + image + '" alt="' + label + '">' +
+          '<span class="idx">' + label + '</span>' +
+        '</button>';
+      });
+    }
+    track.innerHTML = html;
+  }
+
+  function closeLightbox(){
     if(lightbox){
       lightbox.classList.remove('open');
     }
+  }
+
+  function openLightbox(group){
+    if(!lightbox || !lightboxImg || !lightboxLabel || !lightboxThumbs) return;
+
+    lightboxLabel.textContent = group.title;
+    lightboxImg.src = group.images[0];
+    lightboxImg.alt = group.title + ' preview';
+
+    lightboxThumbs.innerHTML = group.images.map(function(image, index){
+      return '<button class="thumb-btn ' + (index === 0 ? 'active' : '') + '" type="button" data-image="' + image + '" aria-label="' + group.title + ' view ' + (index + 1) + '">' +
+        '<img src="' + image + '" alt="' + group.title + ' ' + (index + 1) + '">' +
+      '</button>';
+    }).join('');
+
+    lightbox.classList.add('open');
+  }
+
+  if(galleryGrid){
+    buildGalleryCards();
+  }
+
+  build2DMarquee();
+
+  document.addEventListener('click', function(e){
+    var card = e.target.closest('.gallery-card');
+    if(card){
+      var title = card.getAttribute('data-title');
+      var images = card.getAttribute('data-images').split('|');
+      openLightbox({ title:title, images:images });
+      return;
+    }
+
+    var tile = e.target.closest('.tile');
+    if(tile){
+      openLightbox({ title: tile.getAttribute('data-title') || '2D Art works', images: tile.getAttribute('data-images').split('|') });
+    }
   });
+
+  if(lightboxThumbs){
+    lightboxThumbs.addEventListener('click', function(e){
+      var thumb = e.target.closest('.thumb-btn');
+      if(!thumb) return;
+
+      lightboxImg.src = thumb.getAttribute('data-image');
+      lightboxImg.alt = lightboxLabel.textContent + ' preview';
+
+      lightboxThumbs.querySelectorAll('.thumb-btn').forEach(function(btn){
+        btn.classList.toggle('active', btn === thumb);
+      });
+    });
+  }
+
+  if(lightboxClose){
+    lightboxClose.addEventListener('click', closeLightbox);
+  }
+
   if(lightbox){
     lightbox.addEventListener('click', function(e){
       if(e.target === lightbox){
-        lightbox.classList.remove('open');
+        closeLightbox();
       }
     });
   }
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && lightbox && lightbox.classList.contains('open')){
+      closeLightbox();
+    }
+  });
   /* ---------------- RESUME BUTTONS ---------------- */
   /* ---------------- CONTACT SOCIAL GRID ---------------- */
  var socials = [
